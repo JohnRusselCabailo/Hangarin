@@ -1,62 +1,70 @@
 from django.db import models
 
-
+# Create your models here.
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-         abstract = True
-
+        abstract = True
 class Priority(BaseModel):
-    name = models.CharField(max_length=150)
+    name = models.CharField(max_length=250)
+    level = models.PositiveIntegerField(default=1)
 
     class Meta:
         verbose_name = "Priority"
-        verbose_name_plural = "Priorities"
+        verbose_name_plural = "Priorities"  
 
     def __str__(self):
-         return self.name
+        return f"{self.name} (Level {self.level})"
 
 class Category(BaseModel):
-    name = models.CharField(max_length=150)
+    name = models.CharField(max_length=50, unique=True)
 
     class Meta:
         verbose_name = "Category"
-        verbose_name_plural = "Categories"
+        verbose_name_plural = "Categories"           
 
-    def __str__(self):
-         return self.name
+    def __str__(self):    
+        return self.name
 
 class Task(BaseModel):
-    title = models.CharField(max_length=250)
-    description = models.CharField(max_length=250)
-    deadline = models.DateField()
-    status = models.CharField(max_length=50,
-    choices=
-    [("Pending", "Pending"),
-    ("In Progress ", "In Progress"),
-    ("Completed", "Completed"),
-    ],default="pending")
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    priority = models.ForeignKey(Priority, on_delete=models.CASCADE)
-    def __str__(self):
-         return self.title, self.description, self.status
+    STATUS_CHOICES = [
+        ("Pending", "Pending"),
+        ("In Progress", "In Progress"),
+        ("Completed", "Completed"),
+    ]
 
-class Note(BaseModel):
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    content = models.TextField(max_length=500)
-    
+    title = models.CharField(max_length=100 )
+    description = models.TextField(max_length=10000, null=True, blank=True)
+    deadline = models.DateField(blank=True, null=True)
+    status = models.CharField(max_length=25, choices=STATUS_CHOICES, default="Pending")
+    priority = models.ForeignKey(Priority, on_delete=models.SET_NULL, null=True, blank=True, related_name="tasks")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True, related_name="tasks")
+
     def __str__(self):
-        return f"{self.task}, {self.content}"
+        return self.title
+    
+class Note(BaseModel):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='notes')
+    content = models.TextField()
+    def __str__(self):
+        return f"{self.task.title} & {self.content}"
 
 class SubTask(BaseModel):
-    parent_task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
-    status = models.CharField(max_length=50,
-    choices=
-    [("Pending", "Pending"),
-    ("In Progress ", "In Progress"),
-    ("Completed", "Completed"),
-    ],default="pending")
+    STATUS_CHOICES = [
+        ("Pending", "Pending"),
+        ("In Progress", "In Progress"),
+        ("Completed", "Completed"),
+    ]
 
+
+    parent_task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="subtasks")
+    title = models.CharField(max_length=100)
+    status = models.CharField(
+        max_length=50,
+        choices=STATUS_CHOICES,
+        default="Pending" )
+    
+    def __str__(self):
+        return f"{self.title} ({self.status})"
