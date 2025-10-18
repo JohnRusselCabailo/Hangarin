@@ -1,7 +1,11 @@
 {% load static %}
+
+{% load pwa %}
+
 <!DOCTYPE html>
 <html>
 <head>
+	{% progressive_web_app_meta %}
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>{% block title %}Hangarin - Task Management System{% endblock %}</title>
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
@@ -12,9 +16,18 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
 	<link rel="stylesheet" href="{% static 'css/ready.css' %}">
 	<link rel="stylesheet" href="{% static 'css/demo.css' %}">
+
+	<!-- Line Awesome (used for .la icons) -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css">
 	
-	<!-- Bootstrap Icons -->
+	<!-- Bootstrap Icons (used for .bi icons) -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+	
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+	<link rel="stylesheet" href="{% static 'css/dark-theme.css' %}">
+
+	
 	
 	{% block extra_css %}{% endblock %}
 </head>
@@ -23,7 +36,7 @@
 		<div class="main-header">
 			<div class="logo-header">
 				<a href="{% url 'home' %}" class="logo">
-					Hangarin Dashboard
+					HANGARIN
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
@@ -78,13 +91,13 @@
 						</li>
 						<li class="nav-item dropdown">
 							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
-								<img src="{% static 'img/profile.jpg' %}" alt="user-img" width="36" class="img-circle">
+								<img src="{% static 'img/garou.jpg' %}" alt="user-img" width="36" class="img-circle">
 								<span>{{ request.user.username }}</span>
 							</a>
 							<ul class="dropdown-menu dropdown-user">
 								<li>
 									<div class="user-box">
-										<div class="u-img"><img src="{% static 'img/profile.jpg' %}" alt="user"></div>
+										<div class="u-img"><img src="{% static 'img/garou.jpg' %}" alt="user"></div>
 										<div class="u-text">
 											<h4>{{ request.user.username }}</h4>
 											<p class="text-muted">{{ request.user.email }}</p>
@@ -111,7 +124,7 @@
 			<div class="scrollbar-inner sidebar-wrapper">
 				<div class="user">
 					<div class="photo">
-						<img src="{% static 'img/profile.jpg' %}">
+						<img src="{% static 'img/garou.jpg' %}">
 					</div>
 					<div class="info">
 						<a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
